@@ -223,4 +223,59 @@ public class ToyLangInterpreter {
         }
     }
     
+    
+}
+class ToyLangTokenizer {
+    private static final Map<String, Pattern> tokens = new LinkedHashMap<>();
+    static {
+        tokens.put("=", Pattern.compile("==|=")); //sassignment
+        tokens.put(";", Pattern.compile(";")); //end statement
+        tokens.put("\\+", Pattern.compile("\\+")); //addition
+        tokens.put("-", Pattern.compile("-")); //subtrction
+        tokens.put("\\*", Pattern.compile("\\*")); //multiplication
+        tokens.put("\\(", Pattern.compile("\\(")); //open paren
+        tokens.put("\\)", Pattern.compile("\\)"));//close paren
+        tokens.put("Identifier", Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*")); //identifiers must start with alphabet
+        tokens.put("Literal", Pattern.compile("[0-9]*")); //accepts integer literal
+        tokens.put("Invalid", Pattern.compile(".")); 
+    }
+    
+    //use as whitespace to
+    private static final Pattern space = Pattern.compile("\\s+");
+
+    private String text;
+    private int end;
+    private int cursor;
+
+    public ToyLangTokenizer(String text) {
+        this.text = space.matcher(text).replaceAll("");
+        this.end = this.text.length();
+        this.cursor = 0;
+    }
+
+    //
+    public Map<String, String> nextToken() {
+        if (this.cursor < this.end) {
+            for (Map.Entry<String, Pattern> entry : tokens.entrySet()) {
+                Matcher match = entry.getValue().matcher(this.text);
+                match.region(this.cursor, this.end);
+                if (match.lookingAt()) {
+                    if (entry.getKey().equals("Invalid")) {
+                        throw new RuntimeException("error! invalid character: " + this.text.charAt(this.cursor));
+                    } else {
+                        this.cursor = match.end();
+                        Map<String, String> tokendata = new HashMap<>();
+                        tokendata.put("token", this.text.substring(match.start(), match.end()));
+                        tokendata.put("type", entry.getKey());
+                        return tokendata;
+                    }
+                }
+            }
+        }
+        //
+        Map<String, String> lastToken = new HashMap<>();
+        lastToken.put("token", "");
+        lastToken.put("type", "end");
+        return lastToken;
+    }
 }
