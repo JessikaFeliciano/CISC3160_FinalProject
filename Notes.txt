@@ -1,4 +1,4 @@
-For CISC3160
+My name is Jessika Feliciano and this is my project for CISC3160
 The ToyLanguage project
 I had several issues with classpaths and build paths and was running out of time to resolve
 I also had trouble with github initially so this document serves as a test that my commits go through
@@ -10,3 +10,6 @@ java ToyLangInterpreter testInputs.txt 1
 
 calling normally runs without the debug print
 java ToyLangInterpreter testInputs.txt
+
+I tested on the inputs provided and the output was expected however my error messages and handling could have been better.
+it works on the tested inputs but have not gone much further.
